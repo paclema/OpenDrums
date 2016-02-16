@@ -14,7 +14,8 @@
 #define PIEZOTHRESHOLD 5  // analog threshold for piezo sensing
 #define PADNUM 1          // number of pads
 
-int val, val_max = 5, val_min = 1023;
+int pad_val[PADNUM];
+int val_max = 5, val_min = 1023;
 
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(33, PIN, NEO_GRB + NEO_KHZ800);
 
@@ -31,11 +32,12 @@ void loop() {
 
   // Loop through each piezo and send data
   // on the serial output if the force exceeds
-  // the piezo threshold
-  for(int i = 0; i < PADNUM; i++) {
-    val = analogRead(i);
+  // the piezo threshold	
+  for(int i = 0; i < PADNUM; i++) pad_val[i] = analogRead(i);
 
-    if(val>=val_max) val_max = val;
+  for(int i = 0; i < PADNUM; i++){
+/*
+    if(val[i]>=val_max) val_max = val;
     if(val<=val_min) val_min = val;
 
       Serial.print("PAD: ");
@@ -44,33 +46,21 @@ void loop() {
       Serial.print(val_max);
       Serial.print("\tMin :");
       Serial.println(val_min);
+*/
+    if( pad_val[i] >= PIEZOTHRESHOLD ) {
 
-    if( val >= PIEZOTHRESHOLD ) {
+    	digitalWrite(LEDPIN,HIGH);  // indicate we're sending MIDI data
+    	digitalWrite(LEDPIN,LOW);
 
+    	int val=map(pad_val[i],0,1023,0,255);
 
-      strip.show();
-      digitalWrite(LEDPIN,HIGH);  // indicate we're sending MIDI data
-      /*
-      Serial.print(i);
-      Serial.print(",");
-      Serial.print(val);
-      Serial.println();
-      */
-      digitalWrite(LEDPIN,LOW);
+    	for(int i=0; i<strip.numPixels(); i++) strip.setPixelColor(i, strip.Color(val, 0, 0));
+    	strip.show();
+  		delay(50);
 
-      val=map(val,0,1023,0,255);
-
-      for(int i=0; i<strip.numPixels(); i++) {
-        strip.setPixelColor(i, strip.Color(val, 0, 0));
-       }
-      strip.show();
-      
+    	for(int i=0; i<strip.numPixels(); i++) strip.setPixelColor(i, strip.Color(0, 0, 0));
+    	strip.show();      
     }
-
-      for(int i=0; i<strip.numPixels(); i++) {
-        strip.setPixelColor(i, strip.Color(0, 0, 0));
-      }
-      strip.show();
   }
 
 
