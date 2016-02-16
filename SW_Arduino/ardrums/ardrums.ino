@@ -63,12 +63,15 @@ void loop() {
 
     if( pad_val[i] >= PIEZOTHRESHOLD ) {
 
-    	Serial.print("PAD: ");
+    	Serial.print("PADS: ");
 	    Serial.print(pad_val[i]);
+	    Serial.println(";");
+	    /*
 	    Serial.print("\tMax :");
 	    Serial.print(val_max[i]);
 	    Serial.print("\tMin :");
 	    Serial.println(val_min[i]);
+	    */
 
     	digitalWrite(LEDPIN,HIGH);  // indicate we're sending MIDI data
     	int val=map(pad_val[i],val_min[i],600,0,255);
