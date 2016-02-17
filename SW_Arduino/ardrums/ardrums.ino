@@ -22,7 +22,7 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(33, PIN, NEO_GRB + NEO_KHZ800);
 
 void setup() {
   pinMode(LEDPIN, OUTPUT);
-  Serial.begin(19200);   // set serial output rate
+  Serial.begin(115200);   // set serial output rate
   
   for(int i = 0; i < PADNUM; i++){
   	val_max[i] =0;
